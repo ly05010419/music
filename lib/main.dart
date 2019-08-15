@@ -1,3 +1,5 @@
+import 'package:audioplayers/audio_cache.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:fluttery_seekbar/fluttery_seekbar.dart';
@@ -6,7 +8,7 @@ void main() => runApp(MyApp());
 
 List<Song> songList = [
   Song("assets/cover_01.jpg", "Never say", "Believe 2012"),
-  Song("assets/cover_02.jpg", "Justin Bieber fit. Never say", "The Weeknd"),
+  Song("assets/cover_02.jpg", "Baby", "The Weeknd"),
   Song("assets/cover_03.png", "Boyfriend", "Believe 2012"),
 ];
 
@@ -32,7 +34,12 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  var thumbPercent = 0.4;
+  AudioPlayer audioPlayer;
+  AudioCache audioCache;
+
+  AudioPlayerState audioPlayerState = AudioPlayerState.STOPPED;
+
+  var thumbPercent = 0.0;
 
   Color mainColor = Colors.redAccent;
 
@@ -41,6 +48,18 @@ class _MyHomePageState extends State<MyHomePage> {
   Color mainColor_8 = Colors.redAccent.withOpacity(0.8);
 
   Song mainSong = songList[1];
+
+  double audioDuration = 0;
+
+  String localFilePath = "audio1.mp3";
+
+  play() async {
+    audioCache.play(localFilePath);
+  }
+
+  pause() async {
+    audioPlayer.stop();
+  }
 
   Widget buildSeekBar() {
     return RadialSeekBar(
@@ -62,7 +81,27 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  @override
+  void initState() {
+    super.initState();
+    audioPlayer = AudioPlayer();
+    audioCache = new AudioCache(fixedPlayer: audioPlayer);
 
+    audioPlayer.onAudioPositionChanged.listen((position) => setState(() {
+          setState(() {
+            thumbPercent = position.inMilliseconds.toDouble() / audioDuration;
+          });
+        }));
+    audioPlayer.onDurationChanged.listen((duration) => setState(() {
+          audioDuration = duration.inMilliseconds.toDouble();
+        }));
+
+    audioPlayer.onPlayerStateChanged.listen((state) {
+      setState(() {
+        audioPlayerState = state;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -202,12 +241,23 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                       child: IconButton(
                         iconSize: 80,
-                        icon: Icon(
-                          Icons.play_arrow,
-                          color: Colors.white,
-                        ),
+                        icon: audioPlayerState == AudioPlayerState.PLAYING
+                            ? Icon(
+                                Icons.pause,
+                                color: Colors.white,
+                              )
+                            : Icon(
+                                Icons.play_arrow,
+                                color: Colors.white,
+                              ),
                         onPressed: () {
-                          print('hallo');
+                          if (audioPlayerState == AudioPlayerState.PLAYING) {
+                            pause();
+                            print('-----------------------------pause');
+                          } else {
+                            play();
+                            print('-----------------------------play');
+                          }
                         },
                       ),
                     )),
