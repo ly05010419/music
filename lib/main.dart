@@ -6,7 +6,7 @@ void main() => runApp(MyApp());
 
 List<Song> songList = [
   Song("assets/cover_01.jpg", "Never say", "Believe 2012"),
-  Song("assets/cover_02.jpg", "Beauty...", "Believe 2012"),
+  Song("assets/cover_02.jpg", "Justin Bieber fit. Never say", "The Weeknd"),
   Song("assets/cover_03.png", "Boyfriend", "Believe 2012"),
 ];
 
@@ -32,7 +32,15 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  var thumbPercent = 0.1;
+  var thumbPercent = 0.4;
+
+  Color mainColor = Colors.redAccent;
+
+  Color mainColor_5 = Colors.redAccent.withOpacity(0.5);
+
+  Color mainColor_8 = Colors.redAccent.withOpacity(0.8);
+
+  Song mainSong = songList[1];
 
   Widget buildSeekBar() {
     return RadialSeekBar(
@@ -54,11 +62,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Color mainColor = Colors.redAccent;
 
-  Color mainColor_8 = Colors.redAccent.withOpacity(0.8);
-
-  Song mainSong = songList[0];
 
   @override
   Widget build(BuildContext context) {
@@ -102,7 +106,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   Container(
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: mainColor_8,
+                      color: mainColor_5,
                     ),
                     child: Padding(
                       padding: const EdgeInsets.all(10.0),
@@ -241,16 +245,14 @@ class _MyHomePageState extends State<MyHomePage> {
                             bottomLeft: Radius.circular(30))),
                   ),
                 ),
-                Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      buildSongWidget(songList[0]),
-                      buildSongWidget(songList[1]),
-                      buildSongWidget(songList[2]),
-                    ],
-                  ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    buildSongWidget(songList[0]),
+                    buildSongWidget(songList[1]),
+                    buildSongWidget(songList[2]),
+                  ],
                 ),
               ],
             ),
@@ -279,7 +281,12 @@ class _MyHomePageState extends State<MyHomePage> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text(song.title, style: TextStyle(color: mainColor)),
+                  Container(
+                      width: 120,
+                      child: Text(song.title,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(color: mainColor))),
                   Text(
                     song.subTitle,
                     style: TextStyle(color: mainColor),
@@ -289,7 +296,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ],
           ),
           MaterialButton(
-            splashColor:Colors.transparent,
+            splashColor: Colors.transparent,
             highlightColor: Colors.transparent,
             height: 50,
             minWidth: double.infinity,

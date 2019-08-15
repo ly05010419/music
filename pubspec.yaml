@@ -43,7 +43,6 @@ flutter:
 
 
   assets:
-    - assets/justine.jpg
     - assets/cover_01.jpg
     - assets/cover_02.jpg
     - assets/cover_03.png
