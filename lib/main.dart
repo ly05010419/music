@@ -56,8 +56,6 @@ class _MyHomePageState extends State<MyHomePage> {
       audioCache.play(mainSong.song);
     } else if (audioPlayerState == AudioPlayerState.PAUSED) {
       audioPlayer.resume();
-    } else {
-      print('----------------------------error');
     }
   }
 
@@ -114,7 +112,7 @@ class _MyHomePageState extends State<MyHomePage> {
           icon: Icon(Icons.menu),
           color: mainColor,
           onPressed: () {
-            print('hallo');
+
           },
         ),
       ),
@@ -317,48 +315,55 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget buildSongWidget(Song song) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.only(left: 30, right: 30, top: 8, bottom: 8),
       child: Stack(
         children: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Image.asset(
-                song.image,
-                height: 50,
-                width: 50,
-              ),
-              SizedBox(
-                width: 5,
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Container(
-                      width: 120,
-                      child: Text(song.title,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(color: mainColor))),
-                  Text(
-                    song.subTitle,
-                    style: TextStyle(color: mainColor),
-                  )
-                ],
-              ),
-            ],
-          ),
-          MaterialButton(
-            splashColor: Colors.transparent,
-            highlightColor: Colors.transparent,
-            height: 50,
-            minWidth: double.infinity,
-            onPressed: () {
+          GestureDetector(
+            onTap: () {
               setState(() {
                 mainSong = song;
                 stop();
               });
             },
+            child: Container(
+              color: Colors.transparent,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Container(
+                    width: 50,
+                    height: 50,
+                    color: mainColor_8,
+                    child: Padding(
+                      padding: song == mainSong
+                          ? const EdgeInsets.all(2.0)
+                          : const EdgeInsets.all(0.0),
+                      child: Image.asset(
+                        song.image,
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 5,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Container(
+                          width: 120,
+                          child: Text(song.title,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(color: mainColor))),
+                      Text(
+                        song.subTitle,
+                        style: TextStyle(color: mainColor),
+                      )
+                    ],
+                  ),
+                ],
+              ),
+            ),
           ),
         ],
       ),
