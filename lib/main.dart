@@ -199,16 +199,15 @@ class _MyHomePageState extends State<MyHomePage> {
                               color: mainColor,
                             ),
                             onPressed: () {
+                              stop();
                               setState(() {
-
                                 int index = songList.indexOf(mainSong);
-                                if(index>0){
+                                if (index > 0) {
                                   index--;
                                   mainSong = songList[index];
-                                }else{
-                                  mainSong = songList[songList.length-1];
+                                } else {
+                                  mainSong = songList[songList.length - 1];
                                 }
-
                               });
                             },
                           ),
@@ -219,12 +218,13 @@ class _MyHomePageState extends State<MyHomePage> {
                               color: mainColor,
                             ),
                             onPressed: () {
+                              stop();
                               setState(() {
                                 int index = songList.indexOf(mainSong);
-                                if(index<songList.length-1){
+                                if (index < songList.length - 1) {
                                   index++;
                                   mainSong = songList[index];
-                                }else{
+                                } else {
                                   mainSong = songList[0];
                                 }
                               });
@@ -258,10 +258,8 @@ class _MyHomePageState extends State<MyHomePage> {
                         onPressed: () {
                           if (audioPlayerState == AudioPlayerState.PLAYING) {
                             pause();
-                            print('-----------------------------pause');
                           } else {
                             play();
-                            print('-----------------------------play');
                           }
                         },
                       ),
