@@ -7,9 +7,9 @@ import 'package:fluttery_seekbar/fluttery_seekbar.dart';
 void main() => runApp(MyApp());
 
 List<Song> songList = [
-  Song("assets/cover_01.jpg", "Never say", "Believe 2012"),
-  Song("assets/cover_02.jpg", "Baby", "The Weeknd"),
-  Song("assets/cover_03.png", "Boyfriend", "Believe 2012"),
+  Song("assets/bach_01.jpg", "BWV1007", "Bach", "bach_01.mp3"),
+  Song("assets/chopin_01.jpg", "Nocturne", "Chopin", "chopin_01.mp3"),
+  Song("assets/mozart_01.jpg", "Wunderkind", "Mozart", "mozart_01.mp3"),
 ];
 
 class MyApp extends StatelessWidget {
@@ -51,34 +51,30 @@ class _MyHomePageState extends State<MyHomePage> {
 
   double audioDuration = 0;
 
-  String localFilePath = "audio1.mp3";
-
   play() async {
-    audioCache.play(localFilePath);
+    if (audioPlayerState == AudioPlayerState.STOPPED) {
+      audioCache.play(mainSong.song);
+    } else if (audioPlayerState == AudioPlayerState.PAUSED) {
+      audioPlayer.resume();
+    } else {
+      print('----------------------------error');
+    }
   }
 
   pause() async {
-    audioPlayer.stop();
+    audioPlayer.pause();
   }
 
-  Widget buildSeekBar() {
-    return RadialSeekBar(
-      trackColor: mainColor,
-      trackWidth: 2.0,
-      progressColor: Colors.red,
-      progressWidth: 5.0,
-      thumbPercent: thumbPercent,
-      thumb: CircleThumb(
-        diameter: 20,
-        color: Colors.red,
-      ),
-      progress: thumbPercent,
-      onDragUpdate: (double procent) {
-        setState(() {
-          thumbPercent = procent;
-        });
-      },
-    );
+  stop() async {
+    //audioPlayer.stop();
+  }
+
+  @override
+  void dispose() {
+
+    super.dispose();
+    audioPlayer.stop();
+    print('----------------------------dispose');
   }
 
   @override
@@ -86,6 +82,10 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
     audioPlayer = AudioPlayer();
     audioCache = new AudioCache(fixedPlayer: audioPlayer);
+
+    audioCache.load(songList[0].song);
+    audioCache.load(songList[1].song);
+    audioCache.load(songList[2].song);
 
     audioPlayer.onAudioPositionChanged.listen((position) => setState(() {
           setState(() {
@@ -113,23 +113,12 @@ class _MyHomePageState extends State<MyHomePage> {
           style: TextStyle(fontSize: 30, fontFamily: "Nexa", color: mainColor),
         ),
         leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back_ios,
-            color: mainColor,
-          ),
+          icon: Icon(Icons.menu),
+          color: mainColor,
           onPressed: () {
             print('hallo');
           },
         ),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.menu),
-            color: mainColor,
-            onPressed: () {
-              print('hallo');
-            },
-          )
-        ],
       ),
       body: Column(
         children: <Widget>[
@@ -212,7 +201,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               color: mainColor,
                             ),
                             onPressed: () {
-                              print('hallo');
+                              play();
                             },
                           ),
                           IconButton(
@@ -222,7 +211,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               color: mainColor,
                             ),
                             onPressed: () {
-                              print('hallo');
+                              play();
                             },
                           )
                         ],
@@ -240,7 +229,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         color: mainColor,
                       ),
                       child: IconButton(
-                        iconSize: 80,
+                        iconSize: 50,
                         icon: audioPlayerState == AudioPlayerState.PLAYING
                             ? Icon(
                                 Icons.pause,
@@ -353,12 +342,32 @@ class _MyHomePageState extends State<MyHomePage> {
             onPressed: () {
               setState(() {
                 mainSong = song;
-                print('mainSong:${mainSong.title}');
+                stop();
               });
             },
           ),
         ],
       ),
+    );
+  }
+
+  Widget buildSeekBar() {
+    return RadialSeekBar(
+      trackColor: mainColor,
+      trackWidth: 2.0,
+      progressColor: Colors.red,
+      progressWidth: 5.0,
+      thumbPercent: thumbPercent,
+      thumb: CircleThumb(
+        diameter: 20,
+        color: Colors.red,
+      ),
+      progress: thumbPercent,
+      onDragUpdate: (double procent) {
+        setState(() {
+          thumbPercent = procent;
+        });
+      },
     );
   }
 }
@@ -367,6 +376,7 @@ class Song {
   String image;
   String title;
   String subTitle;
+  String song;
 
-  Song(this.image, this.title, this.subTitle);
+  Song(this.image, this.title, this.subTitle, this.song);
 }

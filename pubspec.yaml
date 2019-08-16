@@ -43,10 +43,14 @@ flutter:
 
 
   assets:
-    - assets/cover_01.jpg
-    - assets/cover_02.jpg
-    - assets/cover_03.png
-    - assets/audio1.mp3
+    - assets/bach_01.jpg
+    - assets/bach_01.mp3
+    - assets/mozart_01.jpg
+    - assets/mozart_01.mp3
+    - assets/chopin_01.jpg
+    - assets/chopin_01.mp3
+
+
 
   fonts:
     - family: Nexa
