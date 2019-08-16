@@ -47,7 +47,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Color mainColor_8 = Colors.redAccent.withOpacity(0.8);
 
-  Song mainSong = songList[1];
+  Song mainSong = songList[0];
 
   double audioDuration = 0;
 
@@ -66,15 +66,13 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   stop() async {
-    //audioPlayer.stop();
+    audioPlayer.stop();
   }
 
   @override
   void dispose() {
-
     super.dispose();
     audioPlayer.stop();
-    print('----------------------------dispose');
   }
 
   @override
@@ -201,7 +199,17 @@ class _MyHomePageState extends State<MyHomePage> {
                               color: mainColor,
                             ),
                             onPressed: () {
-                              play();
+                              setState(() {
+
+                                int index = songList.indexOf(mainSong);
+                                if(index>0){
+                                  index--;
+                                  mainSong = songList[index];
+                                }else{
+                                  mainSong = songList[songList.length-1];
+                                }
+
+                              });
                             },
                           ),
                           IconButton(
@@ -211,7 +219,15 @@ class _MyHomePageState extends State<MyHomePage> {
                               color: mainColor,
                             ),
                             onPressed: () {
-                              play();
+                              setState(() {
+                                int index = songList.indexOf(mainSong);
+                                if(index<songList.length-1){
+                                  index++;
+                                  mainSong = songList[index];
+                                }else{
+                                  mainSong = songList[0];
+                                }
+                              });
                             },
                           )
                         ],
